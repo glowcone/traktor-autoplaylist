@@ -69,8 +69,8 @@ public class TraktorAP_Process
 				match:
 				for (int r = 0; r < playlists.length; r++)
 				{
-					for (int c = 2; c < playlists[r].length; c += 3)
-						if (!hasPattern(a.toUpperCase(), toI(playlists[r][c]), toI(playlists[r][c + 1]), playlists[r][c + 2]))
+					for (int c = 2; c < playlists[r].length; c += 5)
+						if (!hasPattern(a, toB(playlists[r][c]), toB(playlists[r][c + 1]), toI(playlists[r][c + 2]), toI(playlists[r][c + 3]), playlists[r][c + 4]))
 							continue match;
 					playlists[r][1] += "<ENTRY><PRIMARYKEY TYPE=\"TRACK\" KEY=\"" + getVal(a, "VOLUME") + getVal(a, "DIR") + getVal(a, "FILE") +
 							"\"></PRIMARYKEY></ENTRY>";
@@ -81,31 +81,62 @@ public class TraktorAP_Process
 		}
 	}
 
-	public boolean hasPattern(String a, int f, int op, String var)
+	public boolean hasPattern(String a, boolean reg, boolean cs, int f, int op, String var)
 	{
-		var = var.toUpperCase();
+		if(!cs)
+		{
+			a = a.toUpperCase();
+			var = var.toUpperCase();
+		}
 		String field = TraktorAP.fields[f], pNorm, pRegex="";
 
 		if(f == 0)
 		{
-			pNorm = var + "\"></ALBUM>";
+			pNorm = "\"" + var + "\"></ALBUM>";
 			Matcher m = Pattern.compile("ALBUM.*\"(.*?)\"></ALBUM>").matcher(a);
 			if(m.find()) pRegex = m.group(1);
 		}
 		else
 		{
-			pNorm = field + "=\"" + var;
+			pNorm = field + "=\"" + var + "\"";
 			pRegex = getVal(a, field);
 		}
 
-		switch (op)
+		if(reg)
 		{
-			case 0: return a.contains(pNorm);
-			case 1: return !a.contains(pNorm);
-			case 2: return pRegex.contains(var);
-			case 3: return !pRegex.contains(var);
-			case 4: return toI(var) >= Math.round(Double.parseDouble(getVal(a, field)));
-			case 5: return toI(var) <= Math.round(Double.parseDouble(getVal(a, field)));
+			switch (op)
+			{
+				case 0:
+					return pRegex.matches(var);
+				case 1:
+					return pRegex.matches(var);
+				case 2:
+					return pRegex.matches(".*" + var + ".*");
+				case 3:
+					return !pRegex.matches(".*" + var + ".*");
+				case 4:
+					return toI(var) >= Math.round(Double.parseDouble(getVal(a, field)));
+				case 5:
+					return toI(var) <= Math.round(Double.parseDouble(getVal(a, field)));
+			}
+		}
+		else
+		{
+			switch (op)
+			{
+				case 0:
+					return a.contains(pNorm);
+				case 1:
+					return !a.contains(pNorm);
+				case 2:
+					return pRegex.contains(var);
+				case 3:
+					return !pRegex.contains(var);
+				case 4:
+					return toI(var) >= Math.round(Double.parseDouble(getVal(a, field)));
+				case 5:
+					return toI(var) <= Math.round(Double.parseDouble(getVal(a, field)));
+			}
 		}
 		return false;
 	}
@@ -165,6 +196,7 @@ public class TraktorAP_Process
 	}
 */
 	public int toI(String a){ try{return Integer.parseInt(a);} catch (Exception e){log("NaN, a");return 0;}}
+	public boolean toB(String a){ try{return Boolean.parseBoolean(a);} catch (Exception e){log("NaB, a");return false;}}
 	public void log(Object... k) { for (Object b : k) System.out.print(b.toString() + "\t"); System.out.println();}
 }
 //TODO threads (maybe)

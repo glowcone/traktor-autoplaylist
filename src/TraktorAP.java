@@ -20,6 +20,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -42,7 +43,8 @@ import javax.swing.event.ListSelectionListener;
 public class TraktorAP extends JFrame
 {
 	static Map<String, String> conf = new HashMap<>();
-	final static String[] fields = {"ALBUM","ARTIST","BPM","COMMENT","KEY", "GENRE"};
+	final int N = 5;
+	final static String[] fields = {"ALBUM","ARTIST","BPM","COMMENT","KEY", "GENRE", "REMIXER", "DIR"};
 	final static String[] ops = {"is","isn't","has","doesn't have",">=","<="};
 	private String[][] playlists;
 	Scanner sc;
@@ -144,17 +146,18 @@ public class TraktorAP extends JFrame
 	{
 		if (p != -1)
 		{
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < N; i++)
 				playlists[p] = (String[])addTo(playlists[p], "");
-			editRule(p, (playlists[p].length-2)/3-1, true);
+			editRule(p, (playlists[p].length-2)/N-1, true);
 		}
 	}
 
 	public void editRule(int p, int r, boolean... s)
 	{
-		JPanel j = new JPanel();
+		JPanel j = new JPanel(), box =  new JPanel();
 		JComboBox field, op;
 		JTextField var;
+		JCheckBox cReg = new JCheckBox("Use Regex"), cCase = new JCheckBox("Match case");
 
 		field = new JComboBox(fields);
 		op = new JComboBox(ops);
@@ -163,12 +166,14 @@ public class TraktorAP extends JFrame
 
 		if(s.length==0)
 		{
-			op.setSelectedIndex(Integer.parseInt(playlists[p][2+3*r+1]));
-			field.setSelectedIndex(Integer.parseInt(playlists[p][2+3*r]));
-			var.setText(playlists[p][2+3*r+2]);
+			cReg.setSelected(Boolean.parseBoolean(playlists[p][2 + N * r]));
+			cCase.setSelected(Boolean.parseBoolean(playlists[p][2 + N * r + 1]));
+			op.setSelectedIndex(Integer.parseInt(playlists[p][2 + N * r + 3]));
+			field.setSelectedIndex(Integer.parseInt(playlists[p][2 + N * r + 2]));
+			var.setText(playlists[p][2 + N * r + 4]);
 		}
 
-		j.add(field); j.add(op); j.add(var);
+		j.add(field); j.add(op); j.add(var); j.add(cReg); j.add(cCase);
 
 		if(JOptionPane.showConfirmDialog(null, j, "Edit Rule", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION)
 		{
@@ -176,9 +181,11 @@ public class TraktorAP extends JFrame
 			int o = op.getSelectedIndex();
 			if(!((o==4||o==5)&&(f!=2))) //w0w much logic
 			{
-				playlists[p][2 + 3 * r] = field.getSelectedIndex() + "";
-				playlists[p][2 + 3 * r + 1] = op.getSelectedIndex() + "";
-				playlists[p][2 + 3 * r + 2] = var.getText();
+				playlists[p][2 + N * r] = cReg.isSelected() + "";
+				playlists[p][2 + N * r + 1] = cCase.isSelected() + "";
+				playlists[p][2 + N * r + 2] = field.getSelectedIndex() + "";
+				playlists[p][2 + N * r + 3] = op.getSelectedIndex() + "";
+				playlists[p][2 + N * r + 4] = var.getText();
 			}
 			else if(s.length!=0)
 				delRule(p, r);
@@ -189,8 +196,8 @@ public class TraktorAP extends JFrame
 
 	public void delRule(int p, int r)
 	{
-		for (int i = 2; i >= 0; i--)
-			playlists[p] = delTo(playlists[p], 2 + 3 * r + i);
+		for (int i = 4; i >= 0; i--)
+			playlists[p] = delTo(playlists[p], 2 + N * r + i);
 	}
 
 	public void start()
@@ -209,11 +216,13 @@ public class TraktorAP extends JFrame
 
 	public String[] getRules(int index)
 	{
-		String[] rules = new String[(playlists[index].length - 2)/3];
-		for (int i = 2; i < playlists[index].length; i+=3)
-			rules[(i-2)/3] = fields[Integer.parseInt(playlists[index][i])].toLowerCase() + " "
-						+ ops[Integer.parseInt(playlists[index][i+1])] + " "
-						+ "\"" + playlists[index][i+2] + "\"";
+		String[] rules = new String[(playlists[index].length - 2)/N];
+		for (int i = 2; i < playlists[index].length; i+=N)
+		{
+			rules[(i - 2) / N] = fields[Integer.parseInt(playlists[index][i + 2])].toLowerCase() + " "
+					+ ops[Integer.parseInt(playlists[index][i + 3])] + " "
+					+ "\"" + playlists[index][i + 4] + "\"";
+		}
 		return rules;
 	}
 
