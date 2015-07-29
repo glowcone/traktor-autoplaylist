@@ -95,7 +95,7 @@ public class TraktorAP_Process
 		else if (field.equals("COMMENT 2"))
 			field = "RATING";
 		else if (field.equals("LOCK"))
-			return a.contains("LOCK=\"1\"");
+			return (op == 0) ? a.contains("LOCK=\"1\""): !a.contains("LOCK=\"1\"");
 		else if (field.equals("DECIMAL_BPM"))
 		{
 			boolean d = getVal(a, "BPM").contains(".") || getVal(a, "BPM_QUALITY").equals("100");
