@@ -18,7 +18,6 @@ import java.util.Scanner;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -43,8 +42,8 @@ import javax.swing.event.ListSelectionListener;
 public class TraktorAP extends JFrame
 {
 	static Map<String, String> conf = new HashMap<>();
-	final int N = 5;
-	final static String[] fields = {"ALBUM","ARTIST","BPM","COMMENT","KEY", "GENRE", "REMIXER", "DIR"};
+	final int N = 5, K = 3;
+	final static String[] fields = {"ALBUM", "ARTIST", "BPM", "COMMENT", "KEY", "GENRE", "BPM_QUALITY", "COMMENT 2", "CATALOG_NO", "REMIXER", "PRODUCER", "FOLDER", "FILE", "LABEL", "LYRICS", "MIX", "RANKING", "LOCK"};
 	final static String[] ops = {"is","isn't","has","doesn't have",">=","<="};
 	private String[][] playlists;
 	Scanner sc;
@@ -60,7 +59,7 @@ public class TraktorAP extends JFrame
 		}
 		catch (Exception e)
 		{
-			log("Config error");
+			e.printStackTrace();System.exit(0);
 			try
 			{
 				pw = new PrintWriter(new FileWriter(c, false));
@@ -112,7 +111,6 @@ public class TraktorAP extends JFrame
 		this.setDefaultCloseOperation(3);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
-		this.setIconImage(new ImageIcon("res/icon.png").getImage());
 
 		listP.setSelectedIndex(0);
 		listR.setListData(getRules(0));
@@ -179,7 +177,7 @@ public class TraktorAP extends JFrame
 		{
 			int f = field.getSelectedIndex();
 			int o = op.getSelectedIndex();
-			if(!((o==4||o==5)&&(f!=2))) //w0w much logic
+			if(!((o==4||o==5||o==7)&&(f!=2))) //w0w much logic
 			{
 				playlists[p][2 + N * r] = cReg.isSelected() + "";
 				playlists[p][2 + N * r + 1] = cCase.isSelected() + "";
@@ -236,12 +234,20 @@ public class TraktorAP extends JFrame
 		String[] s = splitConf("playlists");
 		conf.remove("playlists");
 		playlists = new String[s.length][];
-		for(int i=0; i<s.length; i++)
+		for (int i = 0; i < s.length; i++)
 			playlists[i] = s[i].split(",", -1);
-		if(playlists[0][0].equals(""))
+		if (playlists[0][0].equals(""))
 			playlists = new String[0][0];
-		if(conf.get("path").equals("")||conf.get("trak").equals(""))
-			if(JOptionPane.showConfirmDialog(this, "Press OK to enter setup", "Setup", JOptionPane.DEFAULT_OPTION) == JOptionPane.OK_OPTION)
+		else if (!(Arrays.deepToString(playlists).contains(", , true") || Arrays.deepToString(playlists).contains(", , false")))
+			for (int i = 0; i < playlists.length; i++)
+				for (int k = playlists[i].length - K; k >= K-1; k-=3)
+				{
+					playlists[i] = addOption(playlists[i], k, "false");
+					playlists[i] = addOption(playlists[i], k, "false");
+				}
+		log(Arrays.deepToString(playlists));
+		if (conf.get("path").equals("") || conf.get("trak").equals(""))
+			if (JOptionPane.showConfirmDialog(this, "Press OK to enter setup", "Setup", JOptionPane.DEFAULT_OPTION) == JOptionPane.OK_OPTION)
 				editConf();
 	}
 
@@ -336,6 +342,16 @@ public class TraktorAP extends JFrame
 				l.add(r[i]);
 
 		return l.toArray(new String[l.size()]);
+	}
+
+	public String[] addOption(String[] p, int n, String v)
+	{
+		p = (String[]) addTo(p, "");
+		for (int i = p.length - 1; i >= 0; i--)
+			if (i >= n)
+				p[i] = p[i - 1];
+		p[n] = v;
+		return p;
 	}
 
 	public void scanTitles()

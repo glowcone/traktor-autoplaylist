@@ -90,7 +90,14 @@ public class TraktorAP_Process
 		}
 		String field = TraktorAP.fields[f], pNorm, pRegex="";
 
-		if(f == 0)
+		if(field.equals("FOLDER"))
+			field = "DIR";
+		else if (field.equals("COMMENT 2"))
+			field = "RATING";
+		else if (field.equals("LOCK"))
+			return a.contains("LOCK=\"1\"");
+
+		if(f==0)
 		{
 			pNorm = "\"" + var + "\"></ALBUM>";
 			Matcher m = Pattern.compile("ALBUM.*\"(.*?)\"></ALBUM>").matcher(a);
