@@ -43,7 +43,7 @@ public class TraktorAP extends JFrame
 {
 	static Map<String, String> conf = new HashMap<>();
 	final int N = 5, K = 3;
-	final static String[] fields = {"ALBUM", "ARTIST", "BPM", "COMMENT", "KEY", "GENRE", "BPM_QUALITY", "COMMENT 2", "CATALOG_NO", "REMIXER", "PRODUCER", "FOLDER", "FILE", "LABEL", "LYRICS", "MIX", "RANKING", "LOCK"};
+	final static String[] fields = {"ALBUM", "ARTIST", "BPM", "COMMENT", "KEY", "GENRE", "DECIMAL_BPM", "COMMENT 2", "CATALOG_NO", "REMIXER", "PRODUCER", "FOLDER", "FILE", "LABEL", "LYRICS", "MIX", "RANKING", "LOCK"};
 	final static String[] ops = {"is","isn't","has","doesn't have",">=","<="};
 	private String[][] playlists;
 	Scanner sc;
@@ -183,7 +183,7 @@ public class TraktorAP extends JFrame
 				playlists[p][2 + N * r + 1] = cCase.isSelected() + "";
 				playlists[p][2 + N * r + 2] = field.getSelectedIndex() + "";
 				playlists[p][2 + N * r + 3] = op.getSelectedIndex() + "";
-				playlists[p][2 + N * r + 4] = var.getText();
+				playlists[p][2 + N * r + 4] = var.getText().equals("") ? "0" : var.getText();
 			}
 			else if(s.length!=0)
 				delRule(p, r);

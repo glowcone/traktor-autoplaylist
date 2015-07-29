@@ -96,6 +96,11 @@ public class TraktorAP_Process
 			field = "RATING";
 		else if (field.equals("LOCK"))
 			return a.contains("LOCK=\"1\"");
+		else if (field.equals("DECIMAL_BPM"))
+		{
+			boolean d = getVal(a, "BPM").contains(".") || getVal(a, "BPM_QUALITY").equals("100");
+			return (op == 0) ?  d: !d;
+		}
 
 		if(f==0)
 		{
@@ -172,7 +177,7 @@ public class TraktorAP_Process
 		}
 	}
 
-	public static String getVal(String h, String n, String... a)
+	public static String getVal(String h, String n)
 	{
 		Matcher m = Pattern.compile(n + "=\"(.*?)\"").matcher(h);
 		if(m.find())
