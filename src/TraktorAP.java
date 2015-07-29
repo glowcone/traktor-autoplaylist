@@ -110,7 +110,6 @@ public class TraktorAP extends JFrame
 		this.setTitle("Traktor Autoplaylist");
 		this.setDefaultCloseOperation(3);
 		this.setResizable(false);
-		this.setLocationRelativeTo(null);
 
 		listP.setSelectedIndex(0);
 		listR.setListData(getRules(0));
@@ -122,10 +121,10 @@ public class TraktorAP extends JFrame
 		bConf.addActionListener(al); bStart.addActionListener(al);
 
 		spanR = new JScrollPane(listR);
-		spanR.setPreferredSize(new Dimension(300, 100));
+		spanR.setPreferredSize(new Dimension(300, 200));
 		spanR.setBorder(BorderFactory.createLineBorder(Color.lightGray));
 		spanP = new JScrollPane(listP);
-		spanP.setPreferredSize(new Dimension(150, 140));
+		spanP.setPreferredSize(new Dimension(150, 240));
 		spanP.setBorder(spanR.getBorder());
 
 		panB.add(bAdd); panB.add(bDel); panB.add(bEdit); panB.add(bConf); panB.add(bStart);
@@ -137,6 +136,7 @@ public class TraktorAP extends JFrame
 		this.setLayout(new FlowLayout());
 		this.add(panP); this.add(panR);
 		this.pack();
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
 
