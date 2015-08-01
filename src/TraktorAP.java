@@ -32,6 +32,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.basic.ComboPopup;
 
 /**
  * @author recurza
@@ -161,6 +162,7 @@ public class TraktorAP extends JFrame
 		op = new JComboBox(ops);
 		var = new JTextField();
 		var.setPreferredSize(new Dimension(100, 20));
+		((ComboPopup)field.getUI().getAccessibleChild(field, 0)).getList().setVisibleRowCount(12);
 
 		if(s.length==0)
 		{
