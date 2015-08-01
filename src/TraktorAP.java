@@ -60,7 +60,7 @@ public class TraktorAP extends JFrame
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();System.exit(0);
+			e.printStackTrace();
 			try
 			{
 				pw = new PrintWriter(new FileWriter(c, false));

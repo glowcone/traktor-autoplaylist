@@ -44,7 +44,7 @@ public class TraktorAP_Process
 			if(System.getProperty("os.name").contains("Mac"))
 				new ProcessBuilder("open", TraktorAP.conf.get("trak")).start();
 			else
-				new ProcessBuilder("start", "", TraktorAP.conf.get("trak")).start();
+				new ProcessBuilder(TraktorAP.conf.get("trak")).start();
 		}
 		catch (IOException e) { System.err.println("IO Exception!\t" + e.getMessage()); }
 		System.exit(0);
