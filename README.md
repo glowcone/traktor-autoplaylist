@@ -17,9 +17,9 @@ This Java program checks for new music and adds them to your playlists automatic
 
 ## Known bugs/Things to improve:
 - Playlists cannot have the same names
-- **Completely untested on Windows**
+- Cannot have ";" in playlist name
+- May not auto-launch Traktor in Windows
 - Cannot detect if you removed a playlist in traktor
-- It scans and sort the entire file every time
 
 ---
 *I am in no way affiliated with Traktor or Native Instruments.*
