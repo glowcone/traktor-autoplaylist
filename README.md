@@ -13,12 +13,11 @@ This Java program checks for new music and adds them to your playlists automatic
 ## Notes:
 - If your collection.nml breaks, don't worry, it made a backup (collection.nml.backup)
 - DECIMAL\_BPM and LOCK are yes/no questions. It assumes that whatever you type in the box means "true". So, to have a playlist of unlocked tracks, use "LOCK isn't true". Same with DECIMAL\_BPM ("is BPM decimal?").
-- I've only tested this on my own library (of 448 tracks), which took ~1.5 seconds with 8 rules.
 
 ## Known bugs/Things to improve:
 - Playlists cannot have the same names
 - Cannot have ";" in playlist name
-- May not auto-launch Traktor in Windows
+- Sometimes may not auto-launch Traktor in Windows
 - Cannot detect if you removed a playlist in traktor
 
 ---
